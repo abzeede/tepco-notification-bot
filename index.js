@@ -1,91 +1,91 @@
-require("dotenv").config();
-const puppeteer = require("puppeteer");
-const line = require("@line/bot-sdk");
-const axios = require("axios");
-const qs = require("querystring");
-const express = require("express");
-const bodyParser = require("body-parser");
-const get = require("lodash/get");
+require('dotenv').config()
+const puppeteer = require('puppeteer')
+const line = require('@line/bot-sdk')
+const axios = require('axios')
+const qs = require('querystring')
+const express = require('express')
+const bodyParser = require('body-parser')
+const get = require('lodash/get')
 
 const TEPCO_LOGIN_URL =
-  "https://www.kurashi.tepco.co.jp/pf/ja/pc/mypage/home/index.page";
-const USERNAME = process.env.TEPCO_USERNAME;
-const PASSWORD = process.env.TEPCO_PASSWORD;
+  'https://www.kurashi.tepco.co.jp/pf/ja/pc/mypage/home/index.page'
+const USERNAME = process.env.TEPCO_USERNAME
+const PASSWORD = process.env.TEPCO_PASSWORD
 
 const getUsageReport = async (year, month) => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
+  const browser = await puppeteer.launch()
+  const page = await browser.newPage()
 
   // authentication
-  await page.goto(TEPCO_LOGIN_URL);
+  await page.goto(TEPCO_LOGIN_URL)
 
-  await page.type('input[name="ACCOUNTUID"]', USERNAME);
+  await page.type('input[name="ACCOUNTUID"]', USERNAME)
 
-  const passwordElm = await page.$('input[name="PASSWORD"]');
-  await passwordElm.type(PASSWORD);
+  const passwordElm = await page.$('input[name="PASSWORD"]')
+  await passwordElm.type(PASSWORD)
   await Promise.all([
-    passwordElm.press("Enter"),
-    page.waitForNavigation({ waitUntil: "networkidle2" }) // wait until it's completed authentication
-  ]);
+    passwordElm.press('Enter'),
+    page.waitForNavigation({ waitUntil: 'networkidle2' }), // wait until it's completed authentication
+  ])
 
   // get report
   const response = await page.goto(
     `https://www.kurashi.tepco.co.jp/pf/ja/res/mypage/learn/comparison.page?_ajax_request=1&year=${year}&month=${month}`
-  );
-  const data = await response.json();
+  )
+  const data = await response.json()
 
-  await browser.close();
+  await browser.close()
 
-  return data;
-};
+  return data
+}
 
 const getYesterdayUsage = report => {
-  const yesterdayDate = new Date().getDate() - 1;
-  return get(report, `data[${yesterdayDate - 1}].kwh`, "-");
-};
+  const yesterdayDate = new Date().getDate() - 1
+  return get(report, `data[${yesterdayDate - 1}].kwh`, '-')
+}
 
 const getTotalUsageInMonth = (report = []) => {
-  return get(report, "data", []).reduce((totalUsage, usage) => {
-    return totalUsage + parseFloat(usage.kwh);
-  }, 0);
-};
+  return get(report, 'data', []).reduce((totalUsage, usage) => {
+    return totalUsage + parseFloat(usage.kwh)
+  }, 0)
+}
 
-(async () => {
-  const current = new Date();
+;(async () => {
+  const current = new Date()
   const report = await getUsageReport(
     current.getFullYear(),
     current.getMonth() + 1
-  );
-  const yesterdayUsage = getYesterdayUsage(report);
-  const totalUsageInMonth = getTotalUsageInMonth(report);
+  )
+  const yesterdayUsage = getYesterdayUsage(report)
+  const totalUsageInMonth = getTotalUsageInMonth(report)
 
   const client = new line.Client({
-    channelAccessToken: process.env.LINE_ACCESS_TOKEN
-  });
+    channelAccessToken: process.env.LINE_ACCESS_TOKEN,
+  })
   client
     .pushMessage(process.env.LINE_USER_ID, {
-      type: "text",
+      type: 'text',
       text: `Yesterday: ${yesterdayUsage} kwh\nTotal: ${totalUsageInMonth.toFixed(
         2
-      )} kwh`
+      )} kwh`,
     })
     .then(() => {
-      console.log("message sent!");
+      console.log('message sent!')
     })
     .catch(err => {
-      console.log("push message error: ", err);
-    });
-})();
+      console.log('push message error: ', err)
+    })
+})()
 
-app = express();
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
+app = express()
+app.use(bodyParser.urlencoded())
+app.use(bodyParser.json())
 
-app.post("/webhook", (req, res) => {
-  console.log(JSON.stringify(req.body));
-  res.sendStatus(200);
-});
+app.post('/webhook', (req, res) => {
+  console.log(JSON.stringify(req.body))
+  res.sendStatus(200)
+})
 
 app.listen(8000, () =>
   console.log(`Tepco Notification bot listening on port 8000!`)
-);
+)
