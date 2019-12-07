@@ -6,6 +6,13 @@ TEPCO doesn't has an application to check or notify about my electric usage, in 
 
 - Use Puppeteer for scraping the information.
 - Serialize the information and push message via Line bot
+- Use cron job for notification every 1 AM
+
+## WIP
+
+- Enable to set notify time
+- Cache
+- Searching
 
 ## Setup
 

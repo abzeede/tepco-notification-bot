@@ -6,6 +6,7 @@ const qs = require('querystring')
 const express = require('express')
 const bodyParser = require('body-parser')
 const get = require('lodash/get')
+const cron = require('node-cron')
 
 const TEPCO_LOGIN_URL =
   'https://www.kurashi.tepco.co.jp/pf/ja/pc/mypage/home/index.page'
@@ -50,7 +51,23 @@ const getTotalUsageInMonth = (report = []) => {
   }, 0)
 }
 
-;(async () => {
+// setup express
+app = express()
+app.use(bodyParser.urlencoded())
+app.use(bodyParser.json())
+
+// webhook route
+app.post('/webhook', (req, res) => {
+  console.log(JSON.stringify(req.body))
+  res.sendStatus(200)
+})
+
+app.listen(8000, () =>
+  console.log(`Tepco Notification bot listening on port 8000!`)
+)
+
+// cron job
+cron.schedule('0 1 * * *', async () => {
   const current = new Date()
   const report = await getUsageReport(
     current.getFullYear(),
@@ -75,17 +92,4 @@ const getTotalUsageInMonth = (report = []) => {
     .catch(err => {
       console.log('push message error: ', err)
     })
-})()
-
-app = express()
-app.use(bodyParser.urlencoded())
-app.use(bodyParser.json())
-
-app.post('/webhook', (req, res) => {
-  console.log(JSON.stringify(req.body))
-  res.sendStatus(200)
 })
-
-app.listen(8000, () =>
-  console.log(`Tepco Notification bot listening on port 8000!`)
-)
