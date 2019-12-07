@@ -1,8 +1,6 @@
 require('dotenv').config()
 const puppeteer = require('puppeteer')
 const line = require('@line/bot-sdk')
-const axios = require('axios')
-const qs = require('querystring')
 const express = require('express')
 const bodyParser = require('body-parser')
 const get = require('lodash/get')
