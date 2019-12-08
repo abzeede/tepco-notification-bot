@@ -2,6 +2,7 @@ const cron = require('node-cron')
 const line = require('@line/bot-sdk')
 const tepco = require('../services/tepco')
 const config = require('../config')
+const usages = require('../db/usages')
 
 exports.createLineNotificationWorker = schedule => {
   return cron.schedule(schedule, async () => {
@@ -12,6 +13,8 @@ exports.createLineNotificationWorker = schedule => {
     )
     const yesterdayUsage = tepco.getYesterdayUsage(report)
     const totalUsageInMonth = tepco.getTotalUsageInMonth(report)
+
+    report.save()
 
     const client = new line.Client({
       channelAccessToken: process.env.LINE_ACCESS_TOKEN,

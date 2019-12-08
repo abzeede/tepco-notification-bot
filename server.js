@@ -15,7 +15,7 @@ app.post('/webhook', (req, res) => {
 })
 
 // cron job
-lineNotification.createLineNotificationWorker('0 8 * * *').start()
+lineNotification.createLineNotificationWorker('05 22 * * *').start()
 console.log('line notification worker is running')
 
 app.listen(8000, () =>
