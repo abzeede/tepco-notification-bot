@@ -9,6 +9,10 @@ const app = express()
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
 
+app.get('/', res => {
+  res.sendStatus(200)
+})
+
 // webhook route
 app.post('/webhook', (req, res) => {
   console.log(JSON.stringify(req.body))
