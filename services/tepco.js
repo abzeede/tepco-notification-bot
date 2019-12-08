@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer')
+const get = require('lodash/get')
 
 const TEPCO_LOGIN_URL =
   'https://www.kurashi.tepco.co.jp/pf/ja/pc/mypage/home/index.page'
