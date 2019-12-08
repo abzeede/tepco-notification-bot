@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const lineNotification = require('./workers/lineNotification')
+const tepco = require('./services/tepco')
 
 // setup express
 const app = express()
@@ -15,7 +16,7 @@ app.post('/webhook', (req, res) => {
 })
 
 // cron job
-lineNotification.createLineNotificationWorker('05 22 * * *').start()
+lineNotification.createLineNotificationWorker('0 8 * * *').start()
 console.log('line notification worker is running')
 
 app.listen(8000, () =>

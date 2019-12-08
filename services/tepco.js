@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer')
 const get = require('lodash/get')
-const tepcoUsage = require('../db/usages')
+const tepcoUsages = require('../db/usages')
 
 const TEPCO_LOGIN_URL =
   'https://www.kurashi.tepco.co.jp/pf/ja/pc/mypage/home/index.page'
@@ -8,11 +8,10 @@ const USERNAME = process.env.TEPCO_USERNAME
 const PASSWORD = process.env.TEPCO_PASSWORD
 
 const save = (reports = [], year) => {
-  reports
+  const insertPromises = reports
     .filter(report => report.kwh !== '-0')
-    .map(report => {
-      tepcoUsage.add({ ...report, year })
-    })
+    .map(report => tepcoUsages.add({ ...report, year }))
+  return Promise.all(insertPromises)
 }
 
 exports.getUsageReport = async (year, month) => {
@@ -45,13 +44,32 @@ exports.getUsageReport = async (year, month) => {
   }
 }
 
-exports.getYesterdayUsage = report => {
-  const yesterdayDate = new Date().getDate() - 1
-  return get(report, `data[${yesterdayDate - 1}].kwh`, '-')
+exports.getYesterdayUsage = () => {
+  const yesterday = new Date(Date.now() - 864e5)
+  return tepcoUsages.collection
+    .doc(
+      `${yesterday.getFullYear()}-${yesterday.getMonth() +
+        1}-${yesterday.getDate() - 1}`
+    )
+    .get()
+    .then(usage => {
+      console.log(usage.get('kwh'))
+      return parseFloat(usage.get('kwh'))
+    })
 }
 
-exports.getTotalUsageInMonth = (report = []) => {
-  return get(report, 'data', []).reduce((totalUsage, usage) => {
-    return totalUsage + parseFloat(usage.kwh)
-  }, 0)
+exports.getTotalUsageInMonth = (year, month) => {
+  let total = 0
+  return tepcoUsages.collection
+    .where('month', '==', month.toString())
+    .get()
+    .then(usages => {
+      if (!usages.empty) {
+        usages.forEach(usage => {
+          total += parseFloat(usage.get('kwh'))
+        })
+      }
+
+      return total
+    })
 }
