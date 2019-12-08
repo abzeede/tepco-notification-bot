@@ -6,12 +6,19 @@ TEPCO doesn't has an application to check or notify about my electric usage, in 
 
 - Use Puppeteer for scraping the information.
 - Serialize the information and push message via Line bot
-- Use cron job for notification every 1 AM
+- Save the information into Firebase Firestore
+- Use cron job for notification every 8 AM
+
+## Tools & Service
+
+- Puppeteer
+- @line/bot-sdk
+- Firebase (Firestore)
+- Heroku
 
 ## WIP
 
 - Enable to set notify time
-- Cache
 - Searching
 
 ## Setup
@@ -27,6 +34,7 @@ TEPCO doesn't has an application to check or notify about my electric usage, in 
   LINE_ACCESS_TOKEN=
   LINE_USER_ID=
   ```
+- create google service account (https://console.cloud.google.com/iam-admin/serviceaccounts)
   **note:**
 
 1. For Line user_id, you have to run the project and set Webhook in Line console, once you join bot room the user_id will show up in terminal
@@ -37,6 +45,10 @@ TEPCO doesn't has an application to check or notify about my electric usage, in 
 ```
 yarn start
 ```
+
+## Deployment
+
+- todo
 
 ### The MIT License
 

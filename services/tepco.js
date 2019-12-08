@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer')
-const get = require('lodash/get')
 const tepcoUsages = require('../db/usages')
 
 const TEPCO_LOGIN_URL =
