@@ -11,8 +11,8 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-app.get('/', res => {
-  res.sendStatus(200)
+app.get('/', (_, res) => {
+  res.send('大丈夫です')
 })
 
 // webhook route
