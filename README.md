@@ -28,6 +28,7 @@ TEPCO doesn't has an application to check or notify about my electric usage, in 
   yarn
   ```
 - create google service account (https://console.cloud.google.com/iam-admin/serviceaccounts)
+- create Firestore database
 - setup env
   ```
   TEPCO_USERNAME=
@@ -41,7 +42,7 @@ TEPCO doesn't has an application to check or notify about my electric usage, in 
   **note:**
 
 1. For Line user_id, you have to run the project and set Webhook in Line console, once you join bot room the user_id will show up in terminal
-2. If you develop on local, you can use https://ngrok.com/ as proxy for your Webhook url
+2. If you're develop on local, you can use https://ngrok.com/ as proxy for your Webhook url
 
 ## Run project
 
@@ -51,7 +52,13 @@ yarn start
 
 ## Deployment
 
-- todo
+### Heroku
+
+1. run "heroku login"
+2. run "heroku create"
+3. run "git push heroku master"
+4. Setup env https://devcenter.heroku.com/articles/config-vars#managing-config-vars
+5. run "heroku ps:restart"
 
 ### The MIT License
 
