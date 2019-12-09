@@ -14,7 +14,7 @@ const save = (reports = [], year) => {
 }
 
 exports.getUsageReport = async (year, month) => {
-  const browser = await puppeteer.launch()
+  const browser = await puppeteer.launch({ args: ['--no-sandbox'] }) // https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md
   const page = await browser.newPage()
 
   // authentication
@@ -44,11 +44,12 @@ exports.getUsageReport = async (year, month) => {
 }
 
 exports.getYesterdayUsage = () => {
-  const yesterday = new Date(Date.now() - 864e5)
+  const yesterday = new Date(Date.now() - 864e5) // 24 * 60 * 60 * 1000
+
   return tepcoUsages.collection
     .doc(
       `${yesterday.getFullYear()}-${yesterday.getMonth() +
-        1}-${yesterday.getDate() - 1}`
+        1}-${yesterday.getDate()}`
     )
     .get()
     .then(usage => {
