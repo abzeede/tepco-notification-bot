@@ -27,14 +27,17 @@ TEPCO doesn't has an application to check or notify about my electric usage, in 
   ```
   yarn
   ```
+- create google service account (https://console.cloud.google.com/iam-admin/serviceaccounts)
 - setup env
   ```
   TEPCO_USERNAME=
   TEPCO_PASSWORD=
   LINE_ACCESS_TOKEN=
   LINE_USER_ID=
+  FIREBASE_PRIVATE_KEY=
+  FIREBASE_CLIENT_EMAIL=
+  FIREBASE_PROJECT_ID=
   ```
-- create google service account (https://console.cloud.google.com/iam-admin/serviceaccounts)
   **note:**
 
 1. For Line user_id, you have to run the project and set Webhook in Line console, once you join bot room the user_id will show up in terminal
