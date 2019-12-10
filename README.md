@@ -18,8 +18,7 @@ TEPCO doesn't has an application to check or notify about my electric usage, in 
 
 ## WIP
 
-- Enable to set notify time
-- Searching
+- Chat with bot
 
 ## Setup
 
@@ -38,6 +37,7 @@ TEPCO doesn't has an application to check or notify about my electric usage, in 
   FIREBASE_PRIVATE_KEY=
   FIREBASE_CLIENT_EMAIL=
   FIREBASE_PROJECT_ID=
+  (optional)NOTIFY_AT="0 8 * * *"
   ```
   **note:**
 
@@ -58,7 +58,9 @@ yarn start
 2. run "heroku create"
 3. run "git push heroku master"
 4. Setup env https://devcenter.heroku.com/articles/config-vars#managing-config-vars
-5. run "heroku ps:restart"
+5. run "heroku config:add TZ="Asia/Tokyo""
+6. run "heroku buildpacks:add jontewks/puppeteer"
+7. run "heroku ps:restart"
 
 ### The MIT License
 
