@@ -24,7 +24,6 @@ app.post('/webhook', (req, res) => {
 reportNotification
   .createLineNotificationWorker(process.env.NOTIFY_AT || '0 8 * * *')
   .start()
-console.log('line notification worker is running')
 
 app.listen(PORT, () =>
   console.log(`Tepco Notification bot listening on port ${PORT}!`)
