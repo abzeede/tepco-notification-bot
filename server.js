@@ -1,8 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
-const lineNotification = require('./workers/lineNotification')
-const tepco = require('./services/tepco')
+const reportNotification = require('./workers/reportNotification')
 
 const PORT = process.env.PORT || 8000
 
@@ -22,7 +21,7 @@ app.post('/webhook', (req, res) => {
 })
 
 // cron job
-lineNotification
+reportNotification
   .createLineNotificationWorker(process.env.NOTIFY_AT || '0 8 * * *')
   .start()
 console.log('line notification worker is running')

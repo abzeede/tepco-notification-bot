@@ -53,17 +53,17 @@ exports.getYesterdayUsage = () => {
     )
     .get()
     .then(usage => {
-      console.log(usage.get('kwh'))
       return parseFloat(usage.get('kwh'))
     })
 }
 
 exports.getTotalUsageInMonth = (year, month) => {
-  let total = 0
   return tepcoUsages.collection
     .where('month', '==', month.toString())
+    .where('year', '==', year)
     .get()
     .then(usages => {
+      let total = 0
       if (!usages.empty) {
         usages.forEach(usage => {
           total += parseFloat(usage.get('kwh'))
@@ -72,4 +72,16 @@ exports.getTotalUsageInMonth = (year, month) => {
 
       return total
     })
+}
+
+// todo: support other plan, right now support only plan standard-s
+exports.calculatePrice = (totalUsage, usage) => {
+  let pricePerUnit = 30.57
+  if (totalUsage <= 120) {
+    pricePerUnit = 19.88
+  } else if (totalUsage <= 300) {
+    pricePerUnit = 26.46
+  }
+
+  return (usage || totalUsage) * pricePerUnit
 }
